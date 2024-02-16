@@ -1,7 +1,7 @@
-﻿string[] productesBotiga = new string[30];
-double[] preus = new double[productesBotiga.Length];
+﻿string[] productesBotiga = {"Pomes", "Platans", "Datils", "Pinya", "Raïm", "Taronjes", "LLimones", "Prunes", "Peres", "Cireres", "Maduixes", "Kiwis"};
+double[] preus = { 3.17 , 1.88 , 7.5, 5, 7,75, 1.3, 2.25, 5.5, 3, 12.20, 6.10, 5.15 };
 string textOpcio, nom, liniaFitxer;
-int numElementsBotiga = 30, opcio, indexProducteModificar = -1;
+int numElementsBotiga = 12, opcio, indexProducteModificar = -1;
 char valorModificar;
 bool sortir = false;
 
@@ -43,7 +43,7 @@ do
             MostrarCapcelera(textOpcio);
             Console.Write("Introdueix el nom del producte (no cal INTRO): ");
             nom = AutocompletarNoms(productesBotiga, numElementsBotiga, textOpcio);
-            liniaFitxer = BuscarLiniaFitxer(nom, numElementsBotiga, productesBotiga, textOpcio, ref indexProducteModificar);
+            liniaFitxer = BuscarElementArray(nom, numElementsBotiga, productesBotiga, textOpcio, ref indexProducteModificar);
             if (liniaFitxer != "")
                 Modificar(valorModificar, ref preus, ref productesBotiga, indexProducteModificar);
             Contador();
@@ -54,7 +54,7 @@ do
             MostrarCapcelera(textOpcio);
             Console.Write("Introdueix el nom del producte (no cal INTRO): ");
             nom = AutocompletarNoms(productesBotiga, numElementsBotiga, textOpcio);
-            liniaFitxer = BuscarLiniaFitxer(nom, numElementsBotiga, productesBotiga, textOpcio, ref indexProducteModificar);
+            liniaFitxer = BuscarElementArray(nom, numElementsBotiga, productesBotiga, textOpcio, ref indexProducteModificar);
             if (liniaFitxer != "")
                 Modificar(valorModificar, ref preus, ref productesBotiga, indexProducteModificar);
             Contador();
@@ -359,9 +359,9 @@ do
         return nom;
     }
 
-    static string BuscarLiniaFitxer(string nom, int numElements, string[] productes, string textOpcio, ref int indexProducteModificar)
+    static string BuscarElementArray(string nom, int numElements, string[] productes, string textOpcio, ref int indexProducteModificar)
     {
-        string liniaFitxer = "";
+        string valorArray = "";
         bool trobat = false;
         char decisiu;
 
@@ -369,9 +369,9 @@ do
         {
             for (int i = 0; i < numElements; i++)
             {
-                liniaFitxer = productes[i];
+                valorArray = productes[i];
 
-                if (liniaFitxer == nom)
+                if (valorArray == nom)
                 {
                     trobat = true;
                     indexProducteModificar = i;
@@ -391,11 +391,11 @@ do
                 else
                 {
                     trobat = true;
-                    liniaFitxer = "";
+                    valorArray = "";
                 }
             }
         }
-        return liniaFitxer;
+        return valorArray;
     }
 
     static void OrdenarPerPreu(string[] productes, double[] preus, int numElements)
