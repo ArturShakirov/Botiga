@@ -1,6 +1,6 @@
 ﻿string[] productesBotiga = {"Pomes", "Platans", "Datils", "Pinya", "Raïm", "Taronjes", "LLimones", "Prunes", "Peres", "Cireres", "Maduixes", "Kiwis"};
-double[] preus = { 3.17 , 1.88 , 7.5, 5, 7,75, 1.3, 2.25, 5.5, 3, 12.20, 6.10, 5.15 };
-string textOpcio, nom, liniaFitxer;
+double[] preus = { 3.17 , 1.88 , 7.5, 5, 7.75, 1.3, 2.25, 5.5, 3, 12.20, 6.10, 5.15 };
+string textOpcio, nom, valorArray;
 int numElementsBotiga = 12, opcio, indexProducteModificar = -1;
 char valorModificar;
 bool sortir = false;
@@ -43,8 +43,8 @@ do
             MostrarCapcelera(textOpcio);
             Console.Write("Introdueix el nom del producte (no cal INTRO): ");
             nom = AutocompletarNoms(productesBotiga, numElementsBotiga, textOpcio);
-            liniaFitxer = BuscarElementArray(nom, numElementsBotiga, productesBotiga, textOpcio, ref indexProducteModificar);
-            if (liniaFitxer != "")
+            valorArray = BuscarElementArray(nom, numElementsBotiga, productesBotiga, textOpcio, ref indexProducteModificar);
+            if (valorArray != "")
                 Modificar(valorModificar, ref preus, ref productesBotiga, indexProducteModificar);
             Contador();
             break;
@@ -54,8 +54,8 @@ do
             MostrarCapcelera(textOpcio);
             Console.Write("Introdueix el nom del producte (no cal INTRO): ");
             nom = AutocompletarNoms(productesBotiga, numElementsBotiga, textOpcio);
-            liniaFitxer = BuscarElementArray(nom, numElementsBotiga, productesBotiga, textOpcio, ref indexProducteModificar);
-            if (liniaFitxer != "")
+            valorArray = BuscarElementArray(nom, numElementsBotiga, productesBotiga, textOpcio, ref indexProducteModificar);
+            if (valorArray != "")
                 Modificar(valorModificar, ref preus, ref productesBotiga, indexProducteModificar);
             Contador();
             break;
@@ -280,7 +280,7 @@ do
 
         for (int i = 0; i < productes.Length && i < preus.Length; i++)
         {
-            linia = "Nom producte: " + productes[i] + "\tPreu: " + preus[i] + "\n";
+            linia = "Nom producte: " + productes[i] + "\tPreu: " + preus[i] + " euros\n";
             botiga = botiga + linia;
         }
 
@@ -308,7 +308,7 @@ do
         }
 
         Console.WriteLine("\nProducte actualitzat!");
-        Console.WriteLine("Nom producte: " + productes[indexProducteModificar] + "\tPreu: " + preus[indexProducteModificar]);
+        Console.WriteLine("Nom producte: " + productes[indexProducteModificar] + "\tPreu: " + preus[indexProducteModificar] + " euros");
     }
     static string AutocompletarNoms(string[] productes, int numElements, string textOpcio)
     {
