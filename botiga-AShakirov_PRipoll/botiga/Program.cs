@@ -16,6 +16,7 @@ while (decisor != 0)
     Console.WriteLine("2. Comprar més d'un producte.");
     Console.WriteLine("3. Ordenar llista.");
     Console.WriteLine("4. Mostrar tiquet de la compra per pantalla.");
+    Console.WriteLine("5. Mostrar tiquet en string.");
     Console.WriteLine("0. Sortir.");
     decisor = Convert.ToInt32(Console.ReadLine());
     while (producteComprar == "" && decisor > 0 && decisor <= 2)
@@ -47,10 +48,12 @@ while (decisor != 0)
         Console.WriteLine(quantitat[i]);
     }
     //S'HAURA DE BORRAR--------------------------------------------------------------------------------------------------------------COMPROVADOR
-    if (decisor==3)
-        //fer mètode per ordenar l'array de a cistella.
-    if (decisor==4)
-        //fer mètode per mostrar l'array de la cistella de forma amigable com si fos un tiquet de la compra.
+    //if (decisor == 3)
+    //    //fer mètode per ordenar l'array de a cistella.
+    if (decisor == 4)
+        MostrarCistella(productesCistella, quantitat, numElemCistella, arrayStockProva, arrayPreuProductesProva, numElemBotigaProva);
+    //if (decisor==5)
+    //    fer metode per mostrar l'array de la cistella com a un string.
     Thread.Sleep(2500);
 }
 static string ComprarProducte(string[] arrayStockProva, double[] arrayPreuProductesProva, string[] productesCistella, int[] quantitat, ref int quantitatActual, ref double diners, int numElemBotigaProva, ref int numElemCistella, string producteComprar)
@@ -176,4 +179,23 @@ static string ComprarProductes(string[] arrayStockProva, double[] arrayPreuProdu
     }
     return producteComprar;
 }
-
+static void MostrarCistella(string[] productesCistella, int[] quantitat, int numElemCistella, string[] arrayStockProva, double[] arrayPreuProductesProva, int numElemBotigaProva)
+{
+    double preu = 0;
+    char sortida;
+    Console.Clear();
+    Console.WriteLine("PRODUCTES QUE TENS ACTUALMENT A LA CISTELLA:");
+    Console.WriteLine();
+    for (int i = 0; i < numElemCistella; i++)
+    {
+        Console.Write("PRODUCTE: " + productesCistella[i] + "\t\t");
+        for (int n = 0; n < numElemBotigaProva; n++)
+        {
+            if (productesCistella[i] == arrayStockProva[n])
+                preu = arrayPreuProductesProva[n] * quantitat[i];
+        }
+        Console.WriteLine("QUANTITAT: " + quantitat[i] + "\t" + "PREU: " + preu+" euros.");
+    }
+    Console.WriteLine("Premeu qualsevol caracter per a tornar:");
+    sortida = Console.ReadKey().KeyChar;
+}
