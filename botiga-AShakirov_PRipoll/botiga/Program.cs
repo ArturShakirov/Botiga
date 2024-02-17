@@ -1,13 +1,14 @@
 ﻿//CISTELLA:
 using System.ComponentModel.Design;
+using System.Security.Cryptography;
 
 string[] productesCistella = new string[10], arrayStockProva = { "POMES", "PERAS", "PLATANS", "PATATES", "OLIVES", "BASTONETS", "LLET", "OUS", "MELONS", "CHICLETS" };
 int[] quantitat = new int[10];
 double[] arrayPreuProductesProva = { 1, 1.5, 2, 2.7, 2.2, 2.1, 1.2, 2.6, 1.9, 3 };
 int numElemCistella = 0, numElemBotigaProva = 10, quantitatActual = 0, decisor = int.MinValue;
 double diners = 0;
-string producteComprar = "";
-char acabarLlista = ' ';
+string producteComprar = "", tiquetCompra;
+char acabarLlista = ' ', sortir;
 while (decisor != 0)
 {
     Console.Clear();
@@ -16,7 +17,7 @@ while (decisor != 0)
     Console.WriteLine("2. Comprar més d'un producte.");
     Console.WriteLine("3. Ordenar llista.");
     Console.WriteLine("4. Mostrar tiquet de la compra per pantalla.");
-    Console.WriteLine("5. Mostrar tiquet en string.");
+    Console.WriteLine("5. Crear un tiquet en string.");
     Console.WriteLine("0. Sortir.");
     decisor = Convert.ToInt32(Console.ReadLine());
     while (producteComprar == "" && decisor > 0 && decisor <= 2)
@@ -33,30 +34,23 @@ while (decisor != 0)
         Console.WriteLine("Quina quantitat de " + producteComprar + " vols agafar?");
         quantitatActual = Convert.ToInt32(Console.ReadLine());
         if (decisor == 1)
-            producteComprar = ComprarProducte(arrayStockProva, arrayPreuProductesProva, productesCistella, quantitat, ref quantitatActual, ref diners, numElemBotigaProva, ref numElemCistella, producteComprar);
-        else producteComprar = ComprarProductes(arrayStockProva, arrayPreuProductesProva, productesCistella, quantitat, ref quantitatActual, ref diners, numElemBotigaProva, ref numElemCistella, producteComprar);
+            producteComprar = ComprarProducte(arrayStockProva, arrayPreuProductesProva, ref productesCistella, ref quantitat, ref quantitatActual, ref diners, numElemBotigaProva, ref numElemCistella, producteComprar);
+        else producteComprar = ComprarProductes(arrayStockProva, arrayPreuProductesProva, ref productesCistella, ref quantitat, ref quantitatActual, ref diners, numElemBotigaProva, ref numElemCistella, producteComprar);
     }
-    //S'HAURA DE BORRAR--------------------------------------------------------------------------------------------------------------COMPROVADOR
     producteComprar = "";
-    Console.WriteLine("PRODUCTE A ENTRAR I QUANTITAT I DINERS I NUMELEMCISTELLA: " + producteComprar + " / " + quantitatActual + " / " + diners + " / " + numElemCistella);
-    for (int i = 0; i < numElemCistella; i++)
-    {
-        Console.WriteLine(productesCistella[i]);
-    }
-    for (int i = 0; i < numElemCistella; i++)
-    {
-        Console.WriteLine(quantitat[i]);
-    }
-    //S'HAURA DE BORRAR--------------------------------------------------------------------------------------------------------------COMPROVADOR
-    //if (decisor == 3)
-    //    //fer mètode per ordenar l'array de a cistella.
+    if (decisor == 3)
+        OrdenarCistella(productesCistella, quantitat, numElemCistella);
     if (decisor == 4)
         MostrarCistella(productesCistella, quantitat, numElemCistella, arrayStockProva, arrayPreuProductesProva, numElemBotigaProva);
-    //if (decisor==5)
-    //    fer metode per mostrar l'array de la cistella com a un string.
-    Thread.Sleep(2500);
+    if (decisor == 5)
+        tiquetCompra=CistellaToString(productesCistella, quantitat, numElemCistella, arrayStockProva, arrayPreuProductesProva, numElemBotigaProva);
+    if (decisor != 0)
+    {
+        Console.WriteLine("\rIntrodueix qualsevol caracter per a continuar.");
+        sortir = Console.ReadKey().KeyChar;
+    }
 }
-static string ComprarProducte(string[] arrayStockProva, double[] arrayPreuProductesProva, string[] productesCistella, int[] quantitat, ref int quantitatActual, ref double diners, int numElemBotigaProva, ref int numElemCistella, string producteComprar)
+static string ComprarProducte(string[] arrayStockProva, double[] arrayPreuProductesProva, ref string[] productesCistella, ref int[] quantitat, ref int quantitatActual, ref double diners, int numElemBotigaProva, ref int numElemCistella, string producteComprar)
 {//FUNCIONA!!!FALTA TREURE A FORA LU DE DEMANAR PRODUCTE I QUANTITAT PER PODER-HO APROFITAR PER FER EL SEGUENT METODE NOMES AMB UN BUCLE.
     Console.Clear();
     bool existeix = false, espai = false, capacitat = false;
@@ -80,14 +74,21 @@ static string ComprarProducte(string[] arrayStockProva, double[] arrayPreuProduc
         espai = true;
     else
     {//Si no hi ha espai, missatge d'error, pregunta si es vol ampliar cistella.
-        Console.WriteLine("Cistella plena. Vols ampliar la cistella?");
-        decisiu = Convert.ToChar(Console.ReadLine());
+        Console.WriteLine("Cistella plena. Vols ampliar la cistella?[s/n]");
+        decisiu = Console.ReadKey().KeyChar;
         if (decisiu == 's' || decisiu == 'S')
         {//Si l'usuari vol ampliar cistella pregunta en quant la vol ampliar i crida metode AmpliacioCistella().
             Console.Clear();
             Console.WriteLine("Introdueix la quantitat d'amplicació de la cistella.");
             ampliacio = Convert.ToInt32(Console.ReadLine());
             AmpliarCistella(ref productesCistella, ref quantitat, ampliacio);
+            for (int i = 0; i < productesCistella.Length; i++)
+            {
+                Console.WriteLine("Producte: " + productesCistella[i]);
+                Console.WriteLine("Cistella: " + quantitat[i]);
+            }
+            Console.WriteLine("nELem: "+numElemCistella);
+            Console.WriteLine("Length: "+productesCistella.Length);
         }
         else Console.WriteLine("No es pot seguir comprant sense ampliar la cistella. S'haura de repetir la comanda.");
     }
@@ -140,6 +141,11 @@ static void AmpliarCistella(ref string[] productesCistella, ref int[] quantitat,
     }
     productesCistella = aux;
     quantitat = aux2;
+    for (int i=0;i<productesCistella.Length;i++)
+    {
+        Console.WriteLine("Producte: " + productesCistella[i]);
+        Console.WriteLine("Cistella: " + quantitat[i]);
+    }
 }
 static void IntroduirCistella(string[] productesCistella, int[] quantitat, ref int numElemCistella, string producteComprar, int quantitatActual)
 {//FUNCIONA!!----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -154,7 +160,7 @@ static void IntroduirCistella(string[] productesCistella, int[] quantitat, ref i
         }
     }
 }
-static string ComprarProductes(string[] arrayStockProva, double[] arrayPreuProductesProva, string[] productesCistella, int[] quantitat, ref int quantitatActual, ref double diners, int numElemBotigaProva, ref int numElemCistella, string producteComprar)
+static string ComprarProductes(string[] arrayStockProva, double[] arrayPreuProductesProva, ref string[] productesCistella, ref int[] quantitat, ref int quantitatActual, ref double diners, int numElemBotigaProva, ref int numElemCistella, string producteComprar)
 {
     char sortida = 's';
     while (sortida != 'n' && sortida != 'N')
@@ -170,7 +176,7 @@ static string ComprarProductes(string[] arrayStockProva, double[] arrayPreuProdu
             Console.WriteLine("Quantitat:");
             quantitatActual = Convert.ToInt32(Console.ReadLine());
         }
-        producteComprar = ComprarProducte(arrayStockProva, arrayPreuProductesProva, productesCistella, quantitat, ref quantitatActual, ref diners, numElemBotigaProva, ref numElemCistella, producteComprar);
+        producteComprar = ComprarProducte(arrayStockProva, arrayPreuProductesProva, ref productesCistella, ref quantitat, ref quantitatActual, ref diners, numElemBotigaProva, ref numElemCistella, producteComprar);
         Console.WriteLine("He sortit");
         Console.WriteLine("Vols seguir comprant?[s/n]");
         sortida = Console.ReadKey().KeyChar;
@@ -196,6 +202,53 @@ static void MostrarCistella(string[] productesCistella, int[] quantitat, int num
         }
         Console.WriteLine("QUANTITAT: " + quantitat[i] + "\t" + "PREU: " + preu+" euros.");
     }
-    Console.WriteLine("Premeu qualsevol caracter per a tornar:");
+}
+static string CistellaToString(string[] productesCistella, int[] quantitat, int numElemCistella, string[] arrayStockProva, double[] arrayPreuProductesProva, int numElemBotigaProva)
+{
+    string tiquetCompra = "";
+    double preu = 0;
+    char sortida;
+    Console.Clear();
+    Console.WriteLine();
+    for (int i = 0; i < numElemCistella; i++)
+    {
+        if (tiquetCompra != "")
+            tiquetCompra = tiquetCompra + "\n";
+        tiquetCompra=tiquetCompra+"PRODUCTE: " + productesCistella[i] + "\t\t";
+        for (int n = 0; n < numElemBotigaProva; n++)
+        {
+            if (productesCistella[i] == arrayStockProva[n])
+                preu = arrayPreuProductesProva[n] * quantitat[i];
+        }
+        tiquetCompra=tiquetCompra+"QUANTITAT: " + quantitat[i] + "\t" + "PREU: " + preu + " euros.";
+    }
+    Console.WriteLine("Vols mostrar l'string 'tiquetCompra'?[s/n]");
     sortida = Console.ReadKey().KeyChar;
+    Console.Clear();
+    if (sortida=='s'||sortida=='S')
+        Console.WriteLine(tiquetCompra);
+    return tiquetCompra;
+}
+static void OrdenarCistella(string[] productesCistella, int[] quantitat, int numElemCistella)
+{
+    string aux;
+    int intAux;
+    for (int nVolta=0;nVolta<numElemCistella-1;nVolta++)
+    {
+        for (int i=0;i<numElemCistella-1;i++)
+        {
+            if (productesCistella[i].CompareTo(productesCistella[i+1])>0)
+            {
+                //PERMUTACIO PRODUCTES CISTELLA:
+                aux = productesCistella[i];
+                productesCistella[i] = productesCistella[i + 1];
+                productesCistella[i + 1] = aux;
+                //PERMUTACIO QUANTITATS CISTELLA:
+                intAux = quantitat[i];
+                quantitat[i] = quantitat[i+1];
+                quantitat[i + 1] = intAux;
+            }
+        }
+    }
+    Console.WriteLine("La cistella s'ha ordenat correctament.");
 }
