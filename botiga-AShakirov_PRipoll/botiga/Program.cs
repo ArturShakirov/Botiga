@@ -6,9 +6,7 @@ char valorModificar;
 bool sortir = false;
 
 Console.WriteLine("Programa que serveix tant per al botiguer com al comprador. Introdueix el num de la funcionalitat que desitjis fer servir:");
-Console.WriteLine("1. Botiguer (botiga).");
-Console.WriteLine("2. Comprador (cistella).");
-Console.WriteLine("0. Sortir programa.");
+Console.WriteLine(MenuInici());
 decisorRol = Convert.ToInt32(Console.ReadLine());
 if (decisorRol == 1)
 {
@@ -99,13 +97,7 @@ else if (decisorRol == 2)
     while (decisor != 0)
     {
         Console.Clear();
-        Console.WriteLine("Quina opcio tries?");
-        Console.WriteLine("1. Comprar un producte.");
-        Console.WriteLine("2. Comprar més d'un producte.");
-        Console.WriteLine("3. Ordenar llista.");
-        Console.WriteLine("4. Mostrar tiquet de la compra per pantalla.");
-        Console.WriteLine("5. Crear un tiquet en string.");
-        Console.WriteLine("0. Sortir.");
+        Console.WriteLine(MenuCistella());
         decisor = Convert.ToInt32(Console.ReadLine());
         while (producteComprar == "" && decisor > 0 && decisor <= 2)
         {
@@ -139,6 +131,40 @@ else if (decisorRol == 2)
 
     }
 }
+static string MenuInici()
+{
+    string menuInici;
+    menuInici = "\x1b[47m\x1b[30m╔════════════════════════════════╗\n" +
+           "║                                ║\n" +
+           "║     1. Botiguer                ║\n" +
+           "║     ----------------------     ║\n" +
+           "║     2. Comprador               ║\n" +
+           "║     ----------------------     ║\n" +
+           "║     \u001b[31m0. SORTIR\u001b[30m                  ║\n" +
+           "╚════════════════════════════════╝\n\x1b[0m";
+    return menuInici;
+}
+static string MenuCistella()
+{
+    string menuCistella;
+    Console.WriteLine(CapceleraCistella());
+    menuCistella = "\x1b[47m\x1b[30m╔════════════════════════════════╗\n" +
+       "║                                ║\n" +
+       "║     1. Comprar un producte     ║\n" +
+       "║     ----------------------     ║\n" +
+       "║     2. Comprar varis productes ║\n" +
+       "║     ----------------------     ║\n" +
+       "║     3. Ordenar llista          ║\n" +
+       "║     ----------------------     ║\n" +
+       "║     4. Mostrar tiquet          ║\n" +
+       "║     ----------------------     ║\n" +
+       "║     5. Crear string tiquet     ║\n" +
+       "║     ----------------------     ║\n" +
+       "║     \x1b[31m0. SORTIR\x1b[30m                  ║\n" +
+       "║                                ║\n" +
+       "╚════════════════════════════════╝\n\x1b[0m";
+    return menuCistella;
+}
 static string Menu()
 {
     string menu;
@@ -169,6 +195,14 @@ static string Menu()
 
 
     return menu;
+}
+static string CapceleraCistella()
+{
+    string capceleraCistella;
+    capceleraCistella = "\x1b[47m\x1b[30m╔════════════════════════════════╗\n" +
+            "║             \x1b[31mCISTELLA\x1b[30m           ║\n" +
+            "╚════════════════════════════════╝\x1b[0m";
+    return capceleraCistella;
 }
 
 static string Capcelera()
@@ -629,13 +663,13 @@ static void MostrarCistella(string[] productesCistella, int[] quantitat, int num
     Console.WriteLine();
     for (int i = 0; i < numElemCistella; i++)
     {
-        Console.Write("PRODUCTE: " + productesCistella[i] + "\t\t");
+        Console.Write("PRODUCTE: " + productesCistella[i] + "\t");
         for (int n = 0; n < numElemBotigaProva; n++)
         {
             if (productesCistella[i] == arrayStockProva[n])
                 preu = arrayPreuProductesProva[n] * quantitat[i];
         }
-        Console.WriteLine("QUANTITAT: " + quantitat[i] + "\t" + "PREU: " + preu + " euros.");
+        Console.WriteLine("QUANTITAT: " + quantitat[i] + "\tPREU: " + preu + " euros.");
     }
 }
 static string CistellaToString(string[] productesCistella, int[] quantitat, int numElemCistella, string[] arrayStockProva, double[] arrayPreuProductesProva, int numElemBotigaProva)
@@ -649,13 +683,13 @@ static string CistellaToString(string[] productesCistella, int[] quantitat, int 
     {
         if (tiquetCompra != "")
             tiquetCompra = tiquetCompra + "\n";
-        tiquetCompra = tiquetCompra + "PRODUCTE: " + productesCistella[i] + "\t\t";
+        tiquetCompra = tiquetCompra + "PRODUCTE: " + productesCistella[i];
         for (int n = 0; n < numElemBotigaProva; n++)
         {
             if (productesCistella[i] == arrayStockProva[n])
                 preu = arrayPreuProductesProva[n] * quantitat[i];
         }
-        tiquetCompra = tiquetCompra + "QUANTITAT: " + quantitat[i] + "\t" + "PREU: " + preu + " euros.";
+        tiquetCompra = tiquetCompra + "\tQUANTITAT: " + quantitat[i] + "\tPREU: " + preu + " euros.";
     }
     Console.WriteLine("Vols mostrar l'string 'tiquetCompra'?[s/n]");
     sortida = Console.ReadKey().KeyChar;
