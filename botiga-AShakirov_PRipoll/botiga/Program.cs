@@ -676,7 +676,6 @@ static string ComprarProductes(string[] arrayStockProva, double[] arrayPreuProdu
             quantitatActual = Convert.ToInt32(Console.ReadLine());
         }
         producteComprar = ComprarProducte(arrayStockProva, arrayPreuProductesProva, ref productesCistella, ref quantitat, ref quantitatActual, ref diners, numElemBotigaProva, ref numElemCistella, producteComprar);
-        Console.WriteLine("He sortit");
         Console.WriteLine("Vols seguir comprant?[s/n]");
         sortida = Console.ReadKey().KeyChar;
         if (sortida != 'N' && sortida != 'n')
