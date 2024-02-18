@@ -1,136 +1,160 @@
-﻿string[] productesBotiga = { "Pomes", "Platans", "Datils", "Pinya", "Raïm", "Taronjes", "LLimones", "Prunes", "Peres", "Cireres", "Maduixes", "Kiwis" };
+﻿string[] productesBotiga = { "Pomes", "Platans", "Datils", "Pinya", "Raïm", "Taronjes", "Llimones", "Prunes", "Peres", "Cireres", "Maduixes", "Kiwis" };
 double[] preus = { 3.17, 1.88, 7.5, 5, 7.75, 1.3, 2.25, 5.5, 3, 12.20, 6.10, 5.15 };
 string textOpcio, nom, valorArray;
 int numElementsBotiga = 12, opcio, indexProducteModificar = -1, decisorRol = 0;
 char valorModificar;
-bool sortir = false;
+bool sortir = false, sortirPrincipal = false;
 
-Console.WriteLine("Programa que serveix tant per al botiguer com al comprador. Introdueix el num de la funcionalitat que desitjis fer servir:");
-Console.WriteLine(MenuInici());
-decisorRol = Convert.ToInt32(Console.ReadLine());
-if (decisorRol == 1)
-{
-    do
-    {
-        Console.Clear();
-        Console.WriteLine(Menu());
-        Console.WriteLine("────────────────────");
-        Console.Write("Introdueix una opció: ");
-        opcio = Console.ReadKey().KeyChar;
 
-        switch (opcio)
-        {
-            case '0' or 'q' or 'Q':
-                sortir = true;
-                break;
-            case '1':
-                textOpcio = "Afegir producte";
-                MostrarCapcelera(textOpcio);
-                AfegirProducte(ref productesBotiga, ref preus, ref numElementsBotiga);
-                Contador();
-                break;
-            case '2':
-                textOpcio = "Afegir productes";
-                MostrarCapcelera(textOpcio);
-                AfegirProductes(ref productesBotiga, ref preus, ref numElementsBotiga);
-                Contador();
-                break;
-            case '3':
-                textOpcio = "Ampliar botiga";
-                MostrarCapcelera(textOpcio);
-                AmpliarBotiga(ref productesBotiga, ref preus);
-                Contador();
-                break;
-            case '4':
-                textOpcio = "Modificar preu.";
-                valorModificar = 'P';
-                MostrarCapcelera(textOpcio);
-                Console.Write("Introdueix el nom del producte (no cal INTRO): ");
-                nom = AutocompletarNoms(productesBotiga, numElementsBotiga, textOpcio);
-                valorArray = BuscarElementArray(nom, numElementsBotiga, productesBotiga, textOpcio, ref indexProducteModificar);
-                if (valorArray != "")
-                    Modificar(valorModificar, ref preus, ref productesBotiga, indexProducteModificar);
-                Contador();
-                break;
-            case '5':
-                textOpcio = "Modificar producte";
-                valorModificar = 'N';
-                MostrarCapcelera(textOpcio);
-                Console.Write("Introdueix el nom del producte (no cal INTRO): ");
-                nom = AutocompletarNoms(productesBotiga, numElementsBotiga, textOpcio);
-                valorArray = BuscarElementArray(nom, numElementsBotiga, productesBotiga, textOpcio, ref indexProducteModificar);
-                if (valorArray != "")
-                    Modificar(valorModificar, ref preus, ref productesBotiga, indexProducteModificar);
-                Contador();
-                break;
-            case '6':
-                textOpcio = "Ordenar per productes";
-                MostrarCapcelera(textOpcio);
-                OrdenarPerNom(productesBotiga, preus, numElementsBotiga);
-                Console.WriteLine("Els productes s'han ordenat pel nom dels productes!");
-                Contador();
-                break;
-            case '7':
-                textOpcio = "Ordenar per preus";
-                MostrarCapcelera(textOpcio);
-                OrdenarPerPreu(productesBotiga, preus, numElementsBotiga);
-                Console.WriteLine("Els productes s'han ordenat per preus!");
-                Contador();
-                break;
-            case '8':
-                textOpcio = "Mostrar productes";
-                MostrarCapcelera(textOpcio);
-                MostrarProductes(productesBotiga, preus);
-                PremeuPerTornar();
-                break;
-        }
-    } while (!sortir);
-}
-else if (decisorRol == 2)
+while (!sortirPrincipal)
 {
-    string[] productesCistella = new string[10];
-    int[] quantitat = new int[10];
-    int numElemCistella = 0, quantitatActual = 0, decisor = int.MinValue;
-    double diners = 0;
-    string producteComprar = "", tiquetCompra;
-    char acabarLlista = ' ', sortirCistella;
-    while (decisor != 0)
+    Console.Clear();
+    Console.WriteLine("Programa que serveix tant per al botiguer com al comprador. Introdueix el num de la funcionalitat que desitjis fer servir. \n");
+    Console.WriteLine(MenuInici());
+    Console.WriteLine("────────────────────");
+    Console.Write("\nIntrodueix el rol: ");
+    decisorRol = Convert.ToInt32(Console.ReadKey().KeyChar);
+    if (decisorRol == '1')
     {
-        Console.Clear();
-        Console.WriteLine(MenuCistella());
-        decisor = Convert.ToInt32(Console.ReadLine());
-        while (producteComprar == "" && decisor > 0 && decisor <= 2)
+        do
         {
             Console.Clear();
-            Console.WriteLine("Introdueix els diners dels que disposes per a fer la compra:");
-            diners = Convert.ToDouble(Console.ReadLine());
-            Console.WriteLine("Introdueix el nom del producte que vols comprar. Productes disponibles:");
-            for (int i = 0; i < numElementsBotiga; i++)
-            {//Mostra els productes que hi ha disponibles per a comprar, productes dins l'array:arrayStockProva.
-                Console.WriteLine(i + ". " + productesBotiga[i]);
-            }
-            producteComprar = Console.ReadLine();
-            Console.WriteLine("Quina quantitat de " + producteComprar + " vols agafar?");
-            quantitatActual = Convert.ToInt32(Console.ReadLine());
-            if (decisor == 1)
-                producteComprar = ComprarProducte(productesBotiga, preus, ref productesCistella, ref quantitat, ref quantitatActual, ref diners, numElementsBotiga, ref numElemCistella, producteComprar);
-            else producteComprar = ComprarProductes(productesBotiga, preus, ref productesCistella, ref quantitat, ref quantitatActual, ref diners, numElementsBotiga, ref numElemCistella, producteComprar);
-        }
-        producteComprar = "";
-        if (decisor == 3)
-            OrdenarCistella(productesCistella, quantitat, numElemCistella);
-        if (decisor == 4)
-            MostrarCistella(productesCistella, quantitat, numElemCistella, productesBotiga, preus, numElementsBotiga);
-        if (decisor == 5)
-            tiquetCompra = CistellaToString(productesCistella, quantitat, numElemCistella, productesBotiga, preus, numElementsBotiga);
-        if (decisor != 0)
-        {
-            Console.WriteLine("\rIntrodueix qualsevol caracter per a continuar.");
-            sortirCistella = Console.ReadKey().KeyChar;
-        }
+            Console.WriteLine(Menu());
+            Console.WriteLine("────────────────────");
+            Console.Write("Introdueix una opció: ");
+            opcio = Console.ReadKey().KeyChar;
 
+            switch (opcio)
+            {
+                case '0' or 'q' or 'Q':
+                    sortirPrincipal = true;
+                    break;
+                case '1':
+                    textOpcio = "Afegir producte";
+                    MostrarCapcelera(textOpcio);
+                    AfegirProducte(ref productesBotiga, ref preus, ref numElementsBotiga);
+                    Contador();
+                    break;
+                case '2':
+                    textOpcio = "Afegir productes";
+                    MostrarCapcelera(textOpcio);
+                    AfegirProductes(ref productesBotiga, ref preus, ref numElementsBotiga);
+                    Contador();
+                    break;
+                case '3':
+                    textOpcio = "Ampliar botiga";
+                    MostrarCapcelera(textOpcio);
+                    AmpliarBotiga(ref productesBotiga, ref preus);
+                    Contador();
+                    break;
+                case '4':
+                    textOpcio = "Modificar preu.";
+                    valorModificar = 'P';
+                    MostrarCapcelera(textOpcio);
+                    Console.Write("Introdueix el nom del producte (no cal INTRO): ");
+                    nom = AutocompletarNoms(productesBotiga, numElementsBotiga, textOpcio);
+                    valorArray = BuscarElementArray(nom, numElementsBotiga, productesBotiga, textOpcio, ref indexProducteModificar);
+                    if (valorArray != "")
+                        Modificar(valorModificar, ref preus, ref productesBotiga, indexProducteModificar);
+                    Contador();
+                    break;
+                case '5':
+                    textOpcio = "Modificar producte";
+                    valorModificar = 'N';
+                    MostrarCapcelera(textOpcio);
+                    Console.Write("Introdueix el nom del producte (no cal INTRO): ");
+                    nom = AutocompletarNoms(productesBotiga, numElementsBotiga, textOpcio);
+                    valorArray = BuscarElementArray(nom, numElementsBotiga, productesBotiga, textOpcio, ref indexProducteModificar);
+                    if (valorArray != "")
+                        Modificar(valorModificar, ref preus, ref productesBotiga, indexProducteModificar);
+                    Contador();
+                    break;
+                case '6':
+                    textOpcio = "Ordenar per productes";
+                    MostrarCapcelera(textOpcio);
+                    OrdenarPerNom(productesBotiga, preus, numElementsBotiga);
+                    Console.WriteLine("Els productes s'han ordenat pel nom dels productes!");
+                    Contador();
+                    break;
+                case '7':
+                    textOpcio = "Ordenar per preus";
+                    MostrarCapcelera(textOpcio);
+                    OrdenarPerPreu(productesBotiga, preus, numElementsBotiga);
+                    Console.WriteLine("Els productes s'han ordenat per preus!");
+                    Contador();
+                    break;
+                case '8':
+                    textOpcio = "Mostrar productes";
+                    MostrarCapcelera(textOpcio);
+                    MostrarProductes(productesBotiga, preus);
+                    PremeuPerTornar();
+                    break;
+                case '9':
+                    sortir = true;
+                    break;
+            }
+        } while (!sortir);
     }
+    else if (decisorRol == '2')
+    {
+        string[] productesCistella = new string[10];
+        int[] quantitat = new int[10];
+        int numElemCistella = 0, quantitatActual = 0, decisor = int.MinValue;
+        double diners = 0;
+        string producteComprar = "", tiquetCompra;
+        char acabarLlista = ' ', sortirCistella;
+        bool cistellaSortir = false;
+
+        while (!cistellaSortir)
+        {
+            Console.Clear();
+            Console.WriteLine(MenuCistella());
+            Console.WriteLine("────────────────────");
+            Console.Write("Introdueix una opció: ");
+            decisor = Convert.ToInt32(Console.ReadLine());
+            while (producteComprar == "" && decisor > 0 && decisor <= 2)
+            {
+                Console.Clear();
+                Console.Write("Introdueix els diners dels que disposes per a fer la compra: ");
+                diners = Convert.ToDouble(Console.ReadLine());
+                Console.Write("Introdueix el nom del producte que vols comprar. Productes disponibles: \n");
+                for (int i = 0; i < numElementsBotiga; i++)
+                {//Mostra els productes que hi ha disponibles per a comprar, productes dins l'array:arrayStockProva.
+                    Console.WriteLine(i + ". " + productesBotiga[i]);
+                }
+                producteComprar = Console.ReadLine();
+                Console.Write("Quina quantitat de " + producteComprar + " vols agafar?: ");
+                quantitatActual = Convert.ToInt32(Console.ReadLine());
+                if (decisor == 1)
+                    producteComprar = ComprarProducte(productesBotiga, preus, ref productesCistella, ref quantitat, ref quantitatActual, ref diners, numElementsBotiga, ref numElemCistella, producteComprar);
+                else producteComprar = ComprarProductes(productesBotiga, preus, ref productesCistella, ref quantitat, ref quantitatActual, ref diners, numElementsBotiga, ref numElemCistella, producteComprar);
+            }
+            producteComprar = "";
+            if (decisor == 3)
+                OrdenarCistella(productesCistella, quantitat, numElemCistella);
+            if (decisor == 4)
+                MostrarCistella(productesCistella, quantitat, numElemCistella, productesBotiga, preus, numElementsBotiga);
+            if (decisor == 5)
+                tiquetCompra = CistellaToString(productesCistella, quantitat, numElemCistella, productesBotiga, preus, numElementsBotiga);
+            if (decisor != 0)
+            {
+                Console.WriteLine("\rIntrodueix qualsevol caracter per a continuar.");
+                sortirCistella = Console.ReadKey().KeyChar;
+            }
+            if (decisor == 0)
+            {
+                cistellaSortir = true;
+                sortirPrincipal = true;
+            }
+            if (decisor == 6)
+                cistellaSortir = true;
+
+        }
+    }
+    else
+        sortirPrincipal = true;
 }
+
 static string MenuInici()
 {
     string menuInici;
@@ -139,8 +163,10 @@ static string MenuInici()
            "║     1. Botiguer                ║\n" +
            "║     ----------------------     ║\n" +
            "║     2. Comprador               ║\n" +
+           "║                                ║\n" +
            "║     ----------------------     ║\n" +
            "║     \u001b[31m0. SORTIR\u001b[30m                  ║\n" +
+           "║                                ║\n" +
            "╚════════════════════════════════╝\n\x1b[0m";
     return menuInici;
 }
@@ -159,6 +185,9 @@ static string MenuCistella()
        "║     4. Mostrar tiquet          ║\n" +
        "║     ----------------------     ║\n" +
        "║     5. Crear string tiquet     ║\n" +
+       "║     ----------------------     ║\n" +
+       "║     6. Canviar de rol          ║\n" +
+       "║                                ║\n" +
        "║     ----------------------     ║\n" +
        "║     \x1b[31m0. SORTIR\x1b[30m                  ║\n" +
        "║                                ║\n" +
@@ -187,12 +216,13 @@ static string Menu()
            "║     7. Ordenar per preus       ║\n" +
            "║     ----------------------     ║\n" +
            "║     8. Mostrar productes       ║\n" +
+           "║     ----------------------     ║\n" +
+           "║     9. Canviar de rol          ║\n" +
            "║                                ║\n" +
            "║     ----------------------     ║\n" +
            "║     \x1b[31mQ. SORTIR\x1b[30m                  ║\n" +
            "║                                ║\n" +
            "╚════════════════════════════════╝\n\x1b[0m";
-
 
     return menu;
 }
@@ -646,7 +676,6 @@ static string ComprarProductes(string[] arrayStockProva, double[] arrayPreuProdu
             quantitatActual = Convert.ToInt32(Console.ReadLine());
         }
         producteComprar = ComprarProducte(arrayStockProva, arrayPreuProductesProva, ref productesCistella, ref quantitat, ref quantitatActual, ref diners, numElemBotigaProva, ref numElemCistella, producteComprar);
-        Console.WriteLine("He sortit");
         Console.WriteLine("Vols seguir comprant?[s/n]");
         sortida = Console.ReadKey().KeyChar;
         if (sortida != 'N' && sortida != 'n')
@@ -669,7 +698,7 @@ static void MostrarCistella(string[] productesCistella, int[] quantitat, int num
             if (productesCistella[i] == arrayStockProva[n])
                 preu = arrayPreuProductesProva[n] * quantitat[i];
         }
-        Console.WriteLine("QUANTITAT: " + quantitat[i] + "\tPREU: " + preu + " euros.");
+        Console.WriteLine("QUANTITAT: " + quantitat[i] + "\tPREU: " + Math.Round(preu, 2) + " euros.");
     }
 }
 static string CistellaToString(string[] productesCistella, int[] quantitat, int numElemCistella, string[] arrayStockProva, double[] arrayPreuProductesProva, int numElemBotigaProva)
