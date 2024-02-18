@@ -18,6 +18,7 @@ while (!sortirPrincipal)
     {
         do
         {
+            sortir = false;
             Console.Clear();
             Console.WriteLine(Menu());
             Console.WriteLine("────────────────────");
@@ -28,6 +29,7 @@ while (!sortirPrincipal)
             {
                 case '0' or 'q' or 'Q':
                     sortirPrincipal = true;
+                    sortir = true;
                     break;
                 case '1':
                     textOpcio = "Afegir producte";
